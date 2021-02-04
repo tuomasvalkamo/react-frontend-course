@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Weather info</title>
+</head>
+
+<body>
+    <!-- Root container for react components -->
+    <div id="root"></div>
+
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
+
+    <script type="text/babel">
+        function Weather() {
+            const [weather, setWeather] = React.useState({ temperature: '', weatherReport: '', iconUrl: '' });
+            const [isReady, setIsReady] = React.useState(false);
+
+            // Query options
+            const city = 'Helsinki';
+            const API_KEY = '';
+
+            // Call API
+            React.useEffect(() => {
+                fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}`)
+                    .then(response => {
+                        if (!response.ok) throw new Error(response.statusText);
+
+                        return response.json();
+                    })
+                    .then(responseData => {
+                        // Calculate f -> C
+                        const celciusTemp = (responseData.main.temp / (9 / 5 + 32)).toFixed(1);
+                        const weatherReport = responseData.weather[0].main;
+                        const iconCode = responseData.weather[0].icon;
+                        const iconUrl = `http://openweathermap.org/img/wn/${iconCode}@2x.png`;
+                        setWeather({ temperature: celciusTemp, weatherReport: weatherReport, iconUrl: iconUrl });
+                        setIsReady(true);
+                    })
+                    .catch(err => console.log(err))
+            }, []);
+
+            if (!isReady) {
+                return (
+                    <div>
+                        <p>Loading...</p>
+                    </div>
+                );
+            } else {
+                return (
+                    <div>
+                        <div>Temperature: {weather.temperature} Celcius</div>
+                        <div>Weather: {weather.weatherReport}</div>
+                        <div><img src={weather.iconUrl} alt="weather-icon" width="40" height="40" /></div>
+                    </div>
+                );
+            }
+        };
+
+        ReactDOM.render(<Weather />, document.getElementById("root"));
+    </script>
+</body>
+
+</html>
