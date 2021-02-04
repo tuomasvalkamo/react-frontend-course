@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>React getting started</title>
+</head>
+
+<body>
+    <!-- Root container for react components -->
+    <div id="root"></div>
+
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
+
+    <script type="text/babel">
+        function AgeCheck() {
+            const [person, setPerson] = React.useState({ name: '', age: '' });
+            const [msg, setMsg] = React.useState('');
+
+            const inputChanged = (event) => {
+                const target = event.target;
+                const name = target.name;
+                const value = target.value;
+
+                setPerson({ ...person, [name]: value })
+            }
+
+            const checkAge = (event) => {
+                const age = person.age;
+
+                if (age >= 18) {
+                    setMsg(`Hello ${person.name}`);
+                } else {
+                    setMsg('You are too young');
+                }
+
+                event.preventDefault();
+            }
+
+            const showAlert = (event) => {
+                alert(`Hello ${name.firstName} ${name.lastName}`)
+                event.preventDefault();
+            }
+
+            return (
+                <div>
+                    <p>{msg}</p>
+                    <form onSubmit={checkAge}>
+                        <p>Name: <input type="text" name="name" value={name.name} onChange={inputChanged} /></p>
+                        <p>Age: <input type="text" name="age" value={name.age} onChange={inputChanged} /></p>
+                        <input type="submit" value="Submit" />
+                    </form>
+                </div>
+            );
+        };
+
+        ReactDOM.render(<AgeCheck />, document.getElementById("root"));
+    </script>
+</body>
+
+</html>

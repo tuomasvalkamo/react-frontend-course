@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>React getting started</title>
+</head>
+
+<body>
+    <!-- Root container for react components -->
+    <div id="root"></div>
+
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
+
+    <script type="text/babel">
+        function HelloName() {
+            const [name, setName] = React.useState('');
+            const [firstName, setFirstName] = React.useState('');
+
+            const inputChanged = (event) => {
+                setName(event.target.value);
+            };
+
+            const addTodo = (event) => {
+                event.preventDefault(); // ignores the default action
+                // Do something with form data
+            }
+
+            return (
+                <div>
+                    <div>Hello {name}</div>
+                    <div>and {firstName}</div>
+                    <div>
+                        <input type="text" value={name} onChange={inputChanged} />
+                    </div>
+                    <div>
+                        <input type="text" name="firstName" value={firstName} onChange={e => setFirstName(e.target.value)} />
+                    </div>
+
+                    <form onSubmit={e => { e.preventDefault() }}>
+                        <input type="text" onChange={inputChanged} />
+                        <input type="submit" value=" Add" />
+                    </form>
+                </div>
+            );
+        };
+
+        ReactDOM.render(<HelloName />, document.getElementById("root"));
+    </script>
+</body>
+
+</html>

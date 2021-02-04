@@ -21,8 +21,8 @@
             return (
                 <div>
                     <p>Counter: {count}</p>
-                    <button onClick={() => setCount(count + 1)}>+</button>
-                    <button onClick={() => setCount(count - 1)}>-</button>
+                    <button onClick={() => setCount(prevCount => prevCount + 1)}>+</button>
+                    <button onClick={() => setCount(prevCount => prevCount - 1)}>-</button>
                     <button onClick={() => setCount(0)}>Reset</button>
                 </div>
             );
