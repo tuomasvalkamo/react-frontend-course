@@ -15,17 +15,18 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
 
     <script type="text/babel">
-        function Weather() {
+        function WeatherByCity() {
             const [weather, setWeather] = React.useState({ temperature: '', weatherReport: '', iconUrl: '' });
             const [isReady, setIsReady] = React.useState(false);
+            const [city, setCity] = React.useState('Helsinki');
 
             // Query options
-            const city = 'Helsinki';
+            const cityQuery = city;
             const API_KEY = '';
-            const API_URL = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`;
+            const API_URL = `https://api.openweathermap.org/data/2.5/weather?q=${cityQuery}&appid=${API_KEY}&units=metric`;
 
             // Call API
-            React.useEffect(() => {
+            const getWeather = (event) => {
                 fetch(API_URL)
                     .then(response => {
                         if (!response.ok) throw new Error(response.statusText);
@@ -41,26 +42,41 @@
                         setIsReady(true);
                     })
                     .catch(err => console.log(err))
-            }, []);
-
-            if (!isReady) {
-                return (
-                    <div>
-                        <p>Loading...</p>
-                    </div>
-                );
-            } else {
-                return (
-                    <div>
-                        <div>Temperature: {weather.temperature} Celcius</div>
-                        <div>Weather: {weather.weatherReport}</div>
-                        <div><img src={weather.iconUrl} alt="weather-icon" width="40" height="40" /></div>
-                    </div>
-                );
             }
+
+            const handleChange = (event) => {
+                setCity(event.target.value);
+            }
+
+            const handleSubmit = (event) => {
+                event.preventDefault();
+
+                getWeather();
+            }
+
+            return (
+                <div>
+                    <div>
+                        <form onSubmit={handleSubmit}>
+                            <input type="text" value={city} onChange={handleChange} />
+                            <input type="submit" value="Get weather" />
+                        </form>
+                    </div>
+                    {weather.temperature != '' ? (
+                        <div>
+                            <h3>{city} weather</h3>
+                            <div>Temperature: {weather.temperature} Celcius</div>
+                            <div>Weather: {weather.weatherReport}</div>
+                            <div><img src={weather.iconUrl} alt="weather-icon" width="40" height="40" /></div>
+                        </div>
+                    ) : (
+                            <div></div>
+                        )}
+                </div>
+            );
         };
 
-        ReactDOM.render(<Weather />, document.getElementById("root"));
+        ReactDOM.render(<WeatherByCity />, document.getElementById("root"));
     </script>
 </body>
 
