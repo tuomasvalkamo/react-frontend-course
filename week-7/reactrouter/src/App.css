@@ -1,0 +1,7 @@
+.App {
+  text-align: center;
+}
+
+nav a:not(:last-of-type) {
+  margin-right: 15px;
+}
