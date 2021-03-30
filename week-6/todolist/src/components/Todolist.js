@@ -45,6 +45,11 @@ function Todolist() {
     }
   }
 
+  // Clear all todos from grid
+  const clearTodos = () => {
+    setTodos([]);
+  }
+
   // Todo columns
   const columns = [
     {
@@ -107,13 +112,21 @@ function Todolist() {
           Add
         </Button>
         <Button
-          style={{ marginTop: 10 }}
+          style={{ marginTop: 10, marginRight: 10 }}
           onClick={deleteTodo}
           variant="contained"
           color="secondary"
         >
           Delete
-      </Button>
+        </Button>
+        <Button
+          style={{ marginTop: 10 }}
+          onClick={clearTodos}
+          variant="contained"
+          color="secondary"
+        >
+          Clear
+        </Button>
       </div>
 
       <div className="ag-theme-material" style={{ width: '90%', height: '700px', margin: 'auto' }}>
