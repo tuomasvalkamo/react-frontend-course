@@ -3,16 +3,28 @@ import { AgGridReact } from 'ag-grid-react';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddCar from './AddCar'
+import EditCar from './EditCar';
+import Snackbar from '@material-ui/core/Snackbar';
 
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-material.css';
 
 const Carlist = () => {
   const [cars, setCars] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [msg, setMsg] = useState('')
 
   useEffect(() => {
     fetchCars();
   }, []);
+
+  const openSnackbar = () => {
+    setOpen(true)
+  }
+
+  const closeSnackbar = () => {
+    setOpen(false)
+  }
 
   // Get cars from REST API
   const fetchCars = () => {
@@ -29,10 +41,14 @@ const Carlist = () => {
       // Call delete REST method
       fetch(url, { method: 'DELETE' })
         .then(response => {
-          if (response.ok)
+          if (response.ok) {
             fetchCars();
-          else
+            setMsg('Car deleted')
+            openSnackbar();
+          }
+          else {
             alert('Something went wrong in deletion.')
+          }
         })
         .catch(err => console.error(err))
     }
@@ -50,6 +66,26 @@ const Carlist = () => {
       .catch(err => console.error(err))
   }
 
+  // Update car
+  const updateCar = (url, updatedCar) => {
+    fetch(url, {
+      method: 'PUT',
+      body: JSON.stringify(updatedCar),
+      headers: { 'Content-type': 'application/json' }
+    })
+      .then(response => {
+        if (response.ok) {
+          fetchCars();
+          setMsg('Car updated')
+          openSnackbar();
+        }
+        else {
+          alert('Something went wrong while updating car.')
+        }
+      })
+      .catch(err => console.error(err))
+  }
+
   const columns = [
     { field: 'brand', sortable: true, filterable: true },
     { field: 'model', sortable: true, filterable: true, width: 100 },
@@ -61,9 +97,17 @@ const Carlist = () => {
       headerName: '',
       field: '_links.self.href',
       cellRendererFramework: params =>
+        <EditCar link={params.value} car={params.data} updateCar={updateCar} />,
+      width: 75
+    },
+    {
+      headerName: '',
+      field: '_links.self.href',
+      cellRendererFramework: params =>
         <IconButton onClick={() => deleteCar(params.value)} color="secondary" aria-label="delete">
           <DeleteIcon />
-        </IconButton>
+        </IconButton>,
+      width: 75
     }
   ]
 
@@ -79,6 +123,12 @@ const Carlist = () => {
           suppressCellSelection={true}
         />
       </div>
+      <Snackbar
+        open={open}
+        message={msg}
+        autoHideDuration={3000}
+        onClose={closeSnackbar}
+      />
     </div>
   )
 }
