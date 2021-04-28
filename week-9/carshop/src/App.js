@@ -10,7 +10,7 @@ function App() {
       <AppBar position="static" style={{ marginBottom: 20 }}>
         <Toolbar>
           <Typography variant="h6">
-            News
+            CarShop
           </Typography>
         </Toolbar>
       </AppBar>
